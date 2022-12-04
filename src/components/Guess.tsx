@@ -1,15 +1,14 @@
 import { useState } from 'react'
 
 
-function Guess({ word, handleReset }:{word:string, handleReset:() => void}) {
+function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string, setGuess:React.Dispatch<React.SetStateAction<string>>, handleReset:() => void}) {
   
-  const [ guess, setGuess ] = useState<string>("")
   const [ correct, setCorrect ] = useState<boolean>(false)
   const [ tryAgain, setTryAgain ] = useState<boolean>(false)
 
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if(word.toLowerCase() === guess) {
+    if(word.toLowerCase() === guess.toLowerCase()) {
       setCorrect(!correct)
     } else {
       setTryAgain(true)

@@ -1,21 +1,33 @@
 import 'bulma/css/bulma.css'
-import React from 'react';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Guess from './components/Guess';
 import Hints from './components/Hints'
 
+type TScrambledWordArrItem = {
+  letter: string,
+  letterGuessed: boolean
+}
 
 function App() {
   
   const [ word, setWord ] = useState<string|undefined>(undefined)
-  const [ scrambledWord, setScrambledWord ] = useState<string|undefined>(undefined)
+  const [ scrambledWordArr, setScrambledWordArr ] = useState<TScrambledWordArrItem[]>([])
   const [ wordHints, setWordHints ] = useState<any>(null)
-  const [ playing, setPlaying ] = useState<boolean>(false)
+  const [ gameStatus, setGameStatus ] = useState<string>("not-playing")
+  const [ guess, setGuess ] = useState<string>("")
 
   useEffect(() => {
+    // Fetch first word behind the scenes
     fetchWord()
+    // Prefetch spinner gif
+    const spinner = new Image()
+    spinner.src = "/spinner.gif"
   }, [])
+
+  useEffect(() => {
+    checkMatchingLetters(guess)
+  }, [guess])
 
   const fetchWord = () => {
     axios.get("https://random-words-api.vercel.app/word/noun")
@@ -24,7 +36,8 @@ function App() {
           const w:string = res.data[0].word
           setWord(w)
           console.log(w)
-          setScrambledWord(scrableWord(w))
+          setScrambledWordArr(scrableWord(w))
+          if(gameStatus !== "not-playing") { setGameStatus("playing") }
           axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
             .then(res => {
               if(res.data) {
@@ -35,19 +48,40 @@ function App() {
       })
   }
 
+  const checkMatchingLetters = (guess:string) => {
+    if(!scrambledWordArr) { return }
+    const guessArr = guess.toLowerCase().split("")
+
+    const scrambledWordArrCopy = [...scrambledWordArr].map(item => {
+      if(guessArr.includes(item.letter)) {
+        const idx = guessArr.findIndex(letter => letter === item.letter)
+        guessArr.splice(idx, 1)
+        return {...item, letterGuessed: true}
+      } else {
+        return {...item, letterGuessed: false}
+      }
+    })
+
+    setScrambledWordArr(scrambledWordArrCopy)
+  }
+
   const scrableWord = (word:string) => {
-    return word
-      .toLowerCase()
-      .split("")
+    const newWordArr:string[] = word.toLowerCase().split("")
+    return newWordArr
       .map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value)
-      .join("")
+      .map(({ value }) => {
+        return {
+          letter: value,
+          letterGuessed: false
+        }
+      })
   }
 
   const handleReset = () => {
+    setGameStatus("loading")
     setWord(undefined)
-    setScrambledWord(undefined)
+    setScrambledWordArr([])
     setWordHints(null)
     fetchWord()
   }
@@ -59,18 +93,27 @@ function App() {
           <div className="column is-two-thirds-tablet is-half-desktop">
             <div className="card has-text-centered">
               <div className="card-content">
-                {!playing && (
+                {gameStatus === "not-playing" && (
                   <>
-                    <button className="button is-primary" onClick={() => setPlaying(!playing)}>Play</button>
+                    <button className="button is-primary" onClick={() => setGameStatus("playing")}>Play</button>
                   </>
                 )}
-                {playing && word && wordHints && scrambledWord && (
+                {gameStatus === "loading" && (
+                  <div className="content mb-5">
+                    <img src="/spinner.gif" />
+                  </div>
+                )}
+                {gameStatus === "playing" && word && scrambledWordArr && ( // Add wordHints back when SSL cert updated
                   <>
                     <div className="content mb-5">
-                      <h2>{scrambledWord}</h2>
+                      <h2>
+                        {scrambledWordArr.map((item, i) => (
+                          <span key={i} className={`${item.letterGuessed ? 'has-background-primary' : ''}`}>{item.letter}</span>
+                        ))}
+                      </h2>
                     </div>
-                    <Guess word={word} handleReset={handleReset} />
-                    <Hints wordHints={wordHints} />
+                    <Guess word={word} guess={guess} setGuess={setGuess} handleReset={handleReset} />
+                    {/* <Hints wordHints={wordHints} /> */}
                   </>
                 )}
               </div>
