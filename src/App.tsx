@@ -1,3 +1,4 @@
+import 'bulma/css/bulma.css'
 import React from 'react';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -52,19 +53,31 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {!playing && (
-        <div>
-          <button onClick={() => setPlaying(!playing)}>Play</button>
+    <div className="App section">
+      <div className="container">
+        <div className="columns is-centered">
+          <div className="column is-two-thirds-tablet is-half-desktop">
+            <div className="card has-text-centered">
+              <div className="card-content">
+                {!playing && (
+                  <>
+                    <button className="button is-primary" onClick={() => setPlaying(!playing)}>Play</button>
+                  </>
+                )}
+                {playing && word && wordHints && scrambledWord && (
+                  <>
+                    <div className="content mb-5">
+                      <h2>{scrambledWord}</h2>
+                    </div>
+                    <Guess word={word} handleReset={handleReset} />
+                    <Hints wordHints={wordHints} />
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-      {playing && word && wordHints && scrambledWord && (
-        <div>
-          {scrambledWord}
-          <Guess word={word} handleReset={handleReset} />
-          <Hints wordHints={wordHints} />
-        </div>
-      )}
+      </div>
     </div>
   );
 }

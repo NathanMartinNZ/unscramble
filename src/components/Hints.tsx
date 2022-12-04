@@ -11,24 +11,24 @@ function Hints({ wordHints }:{wordHints:any}) {
   console.log(hints)
 
   return (
-    <div>
+    <div className="mb-5">
       {hints && hints.length > 0 && (
       <>
         {/* Synonyms */}
-        <div>
+        <div className="my-2">
           {showSynonyms ? (
             <span>Synonyms: {hints[0].synonyms.length > 0 ? hints[0].synonyms.join(", ") : "None found"}</span>
           ) : (
-            <button onClick={() => setShowSynonyms(!showSynonyms)}>Show synonyms</button>
+            <button className="button is-light" onClick={() => setShowSynonyms(!showSynonyms)}>Show synonyms</button>
           )}
         </div>
 
         {/* Definitions */}
-        <div>
+        <div className="my-2">
           {showDefinitions ? hints[0].definitions.map((definition:any) => (
-            <div key={definition.definition}>{definition.definition}</div>
+            <div key={definition.definition} className="mb-2">{definition.definition}</div>
           )) : (
-            <button onClick={() => setShowDefinitions(!showDefinitions)}>Show definitions</button>
+            <button className="button is-light" onClick={() => setShowDefinitions(!showDefinitions)}>Show definitions</button>
           )}
         </div>
       </>

@@ -21,11 +21,11 @@ function Guess({ word, handleReset }:{word:string, handleReset:() => void}) {
   }
 
   return (
-    <div>
+    <div className="column mb-5">
       {!correct && (
         <>
           <form onSubmit={handleSubmit}>
-            <input type="text" value={guess} onChange={(e) => setGuess(() => e.target.value)}></input>
+            <input className="input" type="text" value={guess} onChange={(e) => setGuess(() => e.target.value)}></input>
           </form>
           { tryAgain && guess === "" && (
             <span>Try again</span>
@@ -33,9 +33,9 @@ function Guess({ word, handleReset }:{word:string, handleReset:() => void}) {
         </>
       )}
       {correct && (
-        <div>
-          <span>Hooray! You guessed the correct word <i>{word}</i></span>
-          <button onClick={handleReset}>Play again</button>
+        <div className="content">
+          <p>Hooray! You guessed the correct word <i>{word}</i></p>
+          <button className="button is-primary" onClick={handleReset}>Play again</button>
         </div>
       )}
     </div>
