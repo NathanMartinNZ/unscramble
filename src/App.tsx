@@ -36,12 +36,12 @@ function App() {
           const w:string = res.data[0].word
           setWord(w)
           console.log(w)
-          setScrambledWordArr(scrableWord(w))
-          if(gameStatus !== "not-playing") { setGameStatus("playing") }
+          setScrambledWordArr(scrambleWord(w))
           axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
             .then(res => {
               if(res.data) {
                 setWordHints(res.data[0])
+                if(gameStatus !== "not-playing") { setGameStatus("playing") }
               }
             })
         }
@@ -65,7 +65,7 @@ function App() {
     setScrambledWordArr(scrambledWordArrCopy)
   }
 
-  const scrableWord = (word:string) => {
+  const scrambleWord = (word:string) => {
     const newWordArr:string[] = word.toLowerCase().split("")
     return newWordArr
       .map(value => ({ value, sort: Math.random() }))
@@ -103,7 +103,7 @@ function App() {
                     <img src="/spinner.gif" />
                   </div>
                 )}
-                {gameStatus === "playing" && word && scrambledWordArr && ( // Add wordHints back when SSL cert updated
+                {gameStatus === "playing" && word && wordHints && scrambledWordArr && (
                   <>
                     <div className="content mb-5">
                       <h2>
@@ -113,7 +113,7 @@ function App() {
                       </h2>
                     </div>
                     <Guess word={word} guess={guess} setGuess={setGuess} handleReset={handleReset} />
-                    {/* <Hints wordHints={wordHints} /> */}
+                    <Hints wordHints={wordHints} />
                   </>
                 )}
               </div>
