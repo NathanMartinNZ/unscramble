@@ -113,7 +113,7 @@ function App() {
                       </h2>
                     </div>
                     <Guess word={word} guess={guess} setGuess={setGuess} handleReset={handleReset} />
-                    <Hints wordHints={wordHints} />
+                    <Hints word={word} wordHints={wordHints} />
                   </>
                 )}
               </div>

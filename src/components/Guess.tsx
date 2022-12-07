@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { useState, useRef, MutableRefObject } from 'react'
 
 
 function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string, setGuess:React.Dispatch<React.SetStateAction<string>>, handleReset:() => void}) {
   
   const [ correct, setCorrect ] = useState<boolean>(false)
-  const [ tryAgain, setTryAgain ] = useState<boolean>(false)
+  const inputRef = useRef() as MutableRefObject<HTMLInputElement>
 
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if(word.toLowerCase() === guess.toLowerCase()) {
       setCorrect(!correct)
     } else {
-      setTryAgain(true)
+      inputRef.current.classList.add("incorrect")
       setTimeout(() => {
-        setTryAgain(false)
+        inputRef.current.classList.remove("incorrect")
       }, 2000)
     }
     setGuess("")
@@ -24,11 +24,8 @@ function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string
       {!correct && (
         <>
           <form onSubmit={handleSubmit}>
-            <input className="input" type="text" value={guess} onChange={(e) => setGuess(() => e.target.value)}></input>
+            <input className="input" type="text" ref={inputRef} value={guess} onChange={(e) => setGuess(() => e.target.value)}></input>
           </form>
-          { tryAgain && guess === "" && (
-            <span>Try again</span>
-          )}
         </>
       )}
       {correct && (
