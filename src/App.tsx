@@ -59,7 +59,6 @@ function App() {
   }
 
   const scrambleWord = (w:string) => {
-    console.log(w)
     const newWordArr:string[] = w.toLowerCase().split("")
     return newWordArr
       .map(value => ({ value, sort: Math.random() }))

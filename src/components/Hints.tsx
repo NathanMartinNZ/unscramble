@@ -7,6 +7,7 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
   const [ showFirstLetter, setShowFirstLetter ] = useState<boolean>(false)
   const [ showSynonyms, setShowSynonyms ] = useState<boolean>(false)
   const [ showDefinitions, setShowDefinitions ] = useState<boolean>(false)
+  const [ revealWord, setRevealWord ] = useState<boolean>(false)
 
   const FirstLetter = () => {
     return (
@@ -29,6 +30,18 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
           <span>Synonyms: {hints[0].synonyms.join(", ")}</span>
         ) : (
           <button className="button is-light" onClick={() => setShowSynonyms(!showSynonyms)}>Show synonyms</button>
+        )}
+      </div>
+    )
+  }
+
+  const Reveal = () => {
+    return (
+      <div className="my-2">
+        {revealWord ? (
+          <span>{word}</span>
+        ) : (
+          <button className="button is-light" onClick={() => setRevealWord(!revealWord)}>Just tell me</button>
         )}
       </div>
     )
@@ -58,6 +71,7 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
         <FirstLetter />
         <Synonyms />
         <Definitions />
+        <Reveal />
       </>
       )}
     </div>

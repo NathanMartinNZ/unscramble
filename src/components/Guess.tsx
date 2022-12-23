@@ -1,4 +1,4 @@
-import { useState, useRef, MutableRefObject } from 'react'
+import { useState, useEffect, useRef, MutableRefObject } from 'react'
 
 
 function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string, setGuess:React.Dispatch<React.SetStateAction<string>>, handleReset:() => void}) {
@@ -6,10 +6,22 @@ function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string
   const [ correct, setCorrect ] = useState<boolean>(false)
   const inputRef = useRef() as MutableRefObject<HTMLInputElement>
 
+  // Start new game when pressing enter
+  useEffect(() => {
+    const enterKeyHandler = (e:KeyboardEvent) => {
+      if(e.key === "Enter" && correct) {
+        handleReset()
+      }
+    }
+    document.addEventListener('keydown', enterKeyHandler)
+    return () => { document.removeEventListener('keydown', enterKeyHandler) }
+  }, [correct])
+  
+
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if(word.toLowerCase() === guess.toLowerCase()) {
-      setCorrect(!correct)
+      setCorrect(true)
     } else {
       inputRef.current.classList.add("incorrect")
       setTimeout(() => {
@@ -24,7 +36,7 @@ function Guess({ word, guess, setGuess, handleReset }:{word:string, guess:string
       {!correct && (
         <>
           <form onSubmit={handleSubmit}>
-            <input className="input" type="text" ref={inputRef} value={guess} onChange={(e) => setGuess(() => e.target.value)}></input>
+            <input className="input" type="text" ref={inputRef} value={guess} onChange={(e) => setGuess(() => e.target.value)} autoFocus></input>
           </form>
         </>
       )}
