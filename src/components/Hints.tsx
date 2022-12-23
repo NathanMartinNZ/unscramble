@@ -12,7 +12,7 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
     return (
       <div className="my-2">
         {showFirstLetter ? (
-          <span><b>{firstLetter}</b></span>
+          <span><b>{firstLetter.toUpperCase()}</b></span>
         ) : (
           <button className="button is-light" onClick={() => setShowFirstLetter(!showFirstLetter)}>Show first letter</button>
         )}

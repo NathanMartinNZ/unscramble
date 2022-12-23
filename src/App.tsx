@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css'
 import { useState, useEffect } from 'react'
+import { getRandomWord } from './helpers/getRandomWord';
 import axios from 'axios'
 import Guess from './components/Guess';
 import Hints from './components/Hints'
@@ -29,23 +30,15 @@ function App() {
     checkMatchingLetters(guess)
   }, [guess])
 
-  const fetchWord = () => {
-    axios.get("https://random-words-api.vercel.app/word/noun")
-      .then(res => {
-        if(res.data) {
-          const w:string = res.data[0].word
-          setWord(w)
-          console.log(w)
-          setScrambledWordArr(scrambleWord(w))
-          axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
-            .then(res => {
-              if(res.data) {
-                setWordHints(res.data[0])
-                if(gameStatus !== "not-playing") { setGameStatus("playing") }
-              }
-            })
-        }
-      })
+  const fetchWord = async () => {
+    const w = getRandomWord()
+    setWord(w)
+    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
+    setScrambledWordArr(scrambleWord(w))
+    if(response.data) {
+      setWordHints(response.data[0])
+      if(gameStatus !== "not-playing") { setGameStatus("playing") }
+    }
   }
 
   const checkMatchingLetters = (guess:string) => {
@@ -65,8 +58,9 @@ function App() {
     setScrambledWordArr(scrambledWordArrCopy)
   }
 
-  const scrambleWord = (word:string) => {
-    const newWordArr:string[] = word.toLowerCase().split("")
+  const scrambleWord = (w:string) => {
+    console.log(w)
+    const newWordArr:string[] = w.toLowerCase().split("")
     return newWordArr
       .map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
