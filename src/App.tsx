@@ -11,7 +11,7 @@ type TScrambledWordArrItem = {
 }
 
 function App() {
-  
+  let fetchWordAttempts = 0
   const [ word, setWord ] = useState<string|undefined>(undefined)
   const [ scrambledWordArr, setScrambledWordArr ] = useState<TScrambledWordArrItem[]>([])
   const [ wordHints, setWordHints ] = useState<any>(null)
@@ -33,11 +33,17 @@ function App() {
   const fetchWord = async () => {
     const w = getRandomWord()
     setWord(w)
-    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
-    setScrambledWordArr(scrambleWord(w))
-    if(response.data) {
-      setWordHints(response.data[0])
-      if(gameStatus !== "not-playing") { setGameStatus("playing") }
+    try {
+      const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)
+      setScrambledWordArr(scrambleWord(w))
+      if(response.data) {
+        setWordHints(response.data[0])
+        fetchWordAttempts = 0
+        if(gameStatus !== "not-playing") { setGameStatus("playing") }
+      }
+    } catch(err) {
+      fetchWordAttempts++
+      fetchWordAttempts < 5 ? fetchWord() : setGameStatus("error")
     }
   }
 
@@ -87,14 +93,15 @@ function App() {
             <div className="card has-text-centered">
               <div className="card-content">
                 {gameStatus === "not-playing" && (
-                  <>
-                    <button className="button is-primary" onClick={() => setGameStatus("playing")}>Play</button>
-                  </>
+                  <button className="button is-primary" onClick={() => setGameStatus("playing")}>Play</button>
                 )}
                 {gameStatus === "loading" && (
                   <div className="content mb-5">
                     <img src="/spinner.gif" />
                   </div>
+                )}
+                {gameStatus === "error" && (
+                  <h4 className="is-size-4">Something went wrong :( <br/>Try refresh the page</h4>
                 )}
                 {gameStatus === "playing" && word && wordHints && scrambledWordArr && (
                   <>
