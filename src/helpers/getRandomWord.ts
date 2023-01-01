@@ -1,6 +1,6 @@
 import { nouns, adjectives, verbs } from "../data/words"
 
-export function getRandomWord(wordType="nouns") {
+export function getRandomWord(wordType="all") {
   let list:string[] = []
   switch(wordType) {
     case "nouns":
@@ -11,6 +11,9 @@ export function getRandomWord(wordType="nouns") {
       break
     case "verbs":
       list = verbs
+      break
+    case "all":
+      list = [...nouns, ...adjectives, ...verbs]
       break
   }
 

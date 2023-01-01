@@ -4,6 +4,7 @@ import { getRandomWord } from './helpers/getRandomWord';
 import axios from 'axios'
 import Guess from './components/Guess';
 import Hints from './components/Hints'
+import SettingsModal from './components/SettingsModal';
 
 type TScrambledWordArrItem = {
   letter: string,
@@ -17,14 +18,13 @@ function App() {
   const [ wordHints, setWordHints ] = useState<any>(null)
   const [ gameStatus, setGameStatus ] = useState<string>("not-playing")
   const [ guess, setGuess ] = useState<string>("")
+  const [ showSettings, setShowSettings ] = useState<boolean>(false)
+  const [ typeOfWord, setTypeOfWord ] = useState<string>("all")
 
   useEffect(() => {
-    // Fetch first word behind the scenes
+    // Fetch first word behind the scenes & when settings change
     fetchWord()
-    // Prefetch spinner gif
-    const spinner = new Image()
-    spinner.src = "/spinner.gif"
-  }, [])
+  }, [typeOfWord])
 
   useEffect(() => {
     checkMatchingLetters(guess)
@@ -89,7 +89,7 @@ function App() {
     <div className="App section">
       <div className="container">
         <div className="columns is-centered">
-          <div className="column is-two-thirds-tablet is-half-desktop">
+          <div className="game-container column is-two-thirds-tablet is-half-desktop">
             <div className="card has-text-centered">
               <div className="card-content">
                 {gameStatus === "not-playing" && (
@@ -118,6 +118,10 @@ function App() {
                 )}
               </div>
             </div>
+            <div className="settings">
+              <button className="button" onClick={() => setShowSettings(true)}>&#9881;</button>
+            </div>
+            <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} typeOfWord={typeOfWord} setTypeOfWord={setTypeOfWord} />
           </div>
         </div>
       </div>
