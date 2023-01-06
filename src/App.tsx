@@ -31,7 +31,7 @@ function App() {
   }, [guess])
 
   const fetchWord = async () => {
-    const w = getRandomWord()
+    const w = getRandomWord(typeOfWord)
     setWord(w)
     try {
       const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${w}`)

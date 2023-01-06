@@ -62,7 +62,7 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
   }
   
   if(!wordHints) { return <></> }
-  const hints = wordHints.meanings.filter((definition:any) => definition.partOfSpeech === "noun")
+  const hints = wordHints.meanings
 
   return (
     <div className="mb-5">
