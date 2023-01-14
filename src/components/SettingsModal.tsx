@@ -18,7 +18,7 @@ function SettingsModal({ showSettings, setShowSettings, typeOfWord, setTypeOfWor
     }
 
     return (
-        <div className={`modal ${showSettings ? "is-active" : ""}`}>
+        <div className={`modal px-2 ${showSettings ? "is-active" : ""}`}>
             <div className="modal-background"></div>
             <div className="modal-card">
                 <header className="modal-card-head">

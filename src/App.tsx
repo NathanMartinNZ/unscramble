@@ -93,7 +93,11 @@ function App() {
             <div className="card has-text-centered">
               <div className="card-content">
                 {gameStatus === "not-playing" && (
-                  <button className="button is-primary" onClick={() => setGameStatus("playing")}>Play</button>
+                  <>
+                    <h1 className="is-size-1 is-size-3-mobile has-text-weight-bold">Unscramble</h1>
+                    <p className="is-size-6 mt-2 mx-4">A word guesser game with optional hints and the part of speech to help you out.</p>
+                    <button className="button is-primary play" onClick={() => setGameStatus("playing")}>Play</button>
+                  </>
                 )}
                 {gameStatus === "loading" && (
                   <div className="content mb-5">
@@ -105,7 +109,7 @@ function App() {
                 )}
                 {gameStatus === "playing" && word && wordHints && scrambledWordArr && (
                   <>
-                    <div className="content mb-5">
+                    <div className="content mb-5 mt-3 letters">
                       <h2>
                         {scrambledWordArr.map((item, i) => (
                           <span key={i} className={`${item.letterGuessed ? 'has-background-primary' : ''}`}>{item.letter}</span>
@@ -119,7 +123,7 @@ function App() {
               </div>
             </div>
             <div className="settings">
-              <button className="button" onClick={() => setShowSettings(true)}>&#9881;</button>
+              <button className="button card" onClick={() => setShowSettings(true)}>&#9881;</button>
             </div>
             <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} typeOfWord={typeOfWord} setTypeOfWord={setTypeOfWord} />
           </div>

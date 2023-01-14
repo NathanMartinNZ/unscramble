@@ -13,14 +13,21 @@ code {
 }
 
 .App {
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #eaf4f4;
 }
 
-.content h2 {
-  margin-bottom: 0px!important;
+.game-container {
+  position: relative;
 }
 
-.incorrect {
+.game-container .content h2 {
+  margin-bottom: 0px;
+}
+
+.game-container .incorrect {
   animation: shake 0.2s ease-in-out 0s 2;
   border: 1px solid rgb(206, 19, 19)!important;
 }
@@ -32,18 +39,37 @@ code {
   100% { margin-left: 0rem; }
 }
 
-.game-container {
-  position: relative;
+.game-container .letters span:first-child {
+  padding-left: 4px;
 }
 
-.settings {
+.game-container .letters span:last-child {
+  padding-right: 4px;
+}
+
+.game-container .hints button {
+  width: 160px;
+}
+
+.game-container .settings {
   position: absolute;
   top: -4px;
   right: -4px;
 }
 
-.settings button {
+.game-container .settings button {
   height: 50px;
   width: 50px;
   border-radius: 100%;
+  border: none;
+  background: #f9f9f9;
+}
+
+.modal-card-body {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.button.play {
+  margin: 24px 0;
 }

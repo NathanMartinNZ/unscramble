@@ -65,7 +65,7 @@ function Hints({ word, wordHints }:{word:string, wordHints:any}) {
   const hints = wordHints.meanings
 
   return (
-    <div className="mb-5">
+    <div className="hints mb-5">
       {hints && hints.length > 0 && (
       <>
         <FirstLetter />
